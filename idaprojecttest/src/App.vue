@@ -7,7 +7,11 @@
         <div class="col-4-12" v-for="item in 6" :key="item.name">
           <Card></Card>
         </div>
-        <div class="col-4-12" v-for="(item, index) in filteredItems" :key="index">
+        <div
+          class="col-4-12"
+          v-for="(item, index) in filteredItems"
+          :key="index"
+        >
           <Card2 :itemdata="item" :index="index"></Card2>
         </div>
       </div>
@@ -30,41 +34,48 @@ export default {
     Card2,
   },
   computed: {
-    ...mapGetters(["ITEMS","SELECT"]),
-    filteredItems(){
-      if(this.sortedItems.length > 0){
-         return this.sortedItems;
-      }else{
+    ...mapGetters(["ITEMS", "SELECT"]),
+    filteredItems() {
+      if (this.sortedItems.length > 0) {
+        return this.sortedItems;
+      } else {
         return this.ITEMS;
       }
-
-    }
+    },
   },
-  data(){
-    return{
-      sortedItems:[]
-    }
+  data() {
+    return {
+      sortedItems: [],
+    };
   },
-  watch:{
-    SELECT(){
+  watch: {
+    SELECT() {
       this.sortedItems = this.ITEMS;
-      if(this.SELECT == "min"){
-        this.sortedItems = this.sortedItems.sort((a,b)=>{
-          return a.price  - b.price;
+      if (this.SELECT == "min") {
+        console.log('min')
+        this.sortedItems = this.sortedItems.sort(function (a, b) {
+          let aPrice = a.price.replaceAll(/\s/g, "");
+          let bPrice = b.price.replaceAll(/\s/g, "");
+          return parseFloat(aPrice) - parseFloat(bPrice);
         });
-      }else if(this.SELECT == 'max'){
-        this.sortedItems = this.sortedItems.sort((a,b)=>{
-          return b.price  - a.price;
+      } else if (this.SELECT == "max") {
+        console.log('max')
+        this.sortedItems = this.sortedItems.sort((a, b) => {
+          let aPrice = a.price.replaceAll(/\s/g, "");
+          let bPrice = b.price.replaceAll(/\s/g, "");
+          return parseFloat(bPrice) - parseFloat(aPrice);
         });
-      }else if(this.SELECT == "name"){
-        this.sortedItems = this.sortedItems.sort((a,b)=>{
+      } else if (this.SELECT == "name") {
+        console.log('name')
+        this.sortedItems = this.sortedItems.sort((a, b) => {
           return a.name.localeCompare(b.name);
         });
-      }else{
+      } else {
+        console.log('all')
         this.sortedItems = [];
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -91,7 +102,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  
 }
 
 .col-4-12 {
