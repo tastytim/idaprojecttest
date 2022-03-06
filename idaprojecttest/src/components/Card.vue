@@ -5,9 +5,7 @@
       <h2>Product name</h2>
       <div>
         Description description description description description description
-        description Description description description description description
-        description Description description description description description
-        description description
+        description Description
       </div>
       <h1>10 000 rub.</h1>
     </div>
