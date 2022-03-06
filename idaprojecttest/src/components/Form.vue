@@ -1,11 +1,6 @@
 <template>
   <div>
-    <form
-      @submit.prevent="submitForm"
-      autocomplete="off"
-      action="submit"
-      method="get"
-    >
+    <div>
       <div class="form_block">
         <div>
           <label for="product_name" class="require_round">Product name</label>
@@ -25,6 +20,7 @@
           <label for="product_description">Product Description</label>
         </div>
         <textarea
+          v-model="form.description"
           type="text"
           placeholder="Enter description"
           rows="4"
@@ -44,7 +40,6 @@
         <div><label for="Price" class="require_round">Price</label></div>
 
         <input
-          v-model.number="form.price"
           placeholder="Enter price"
           v-model="modelNumber"
           :type="indicatorChange ? 'number' : 'text'"
@@ -56,13 +51,16 @@
         </p>
       </div>
       <div class="btn_block">
-        <button class="btn" :disabled="!formValid">Add product</button>
+        <button class="btn" :disabled="!formValid" @click="addToItems">
+          Add product
+        </button>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -70,6 +68,7 @@ export default {
         name: null,
         price: '',
         url: null,
+        description: null,
       },
       errors: {
         urlError: [],
@@ -94,16 +93,28 @@ export default {
         return true;
       }
     },
+    ...mapActions(["ADD_TO_ITEMS"]),
+    addToItems() {
+      if (this.submitForm) {
+        this.ADD_TO_ITEMS({
+          name: this.form.name,
+          description: this.form.description,
+          url: this.form.url,
+          price: this.modelNumber,
+        });
+      }
+    },
   },
+
   computed: {
     nameValid() {
       return this.form.name != null;
     },
     priceValid() {
-      return this.form.url != null;
+      return this.modelNumber != '';
     },
     urlValid() {
-      return this.form.price != '';
+      return this.form.url != null;
     },
     formValid() {
       return this.nameValid && this.priceValid && this.urlValid;
@@ -112,10 +123,10 @@ export default {
       get() {
         return this.indicatorChange
           ? this.form.price
-          : this.form.price.toLocaleString('ru-RU');
+          : this.form.price.toLocaleString("ru-RU")
       },
       set(value) {
-        this.form.price = +value.replace(/\|/g, "");
+        this.form.price = +value.replace(/\s/g, "");
       },
     },
   },
