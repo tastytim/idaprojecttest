@@ -95,7 +95,7 @@ export default {
     },
     ...mapActions(["ADD_TO_ITEMS"]),
     addToItems() {
-      if (this.submitForm) {
+      if (this.submitForm()) {
         this.ADD_TO_ITEMS({
           name: this.form.name,
           description: this.form.description,
